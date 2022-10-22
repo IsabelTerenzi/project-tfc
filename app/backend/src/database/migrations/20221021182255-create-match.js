@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Matches', {
+    await queryInterface.createTable('matches', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -49,13 +49,13 @@ module.exports = {
 
       inProgress: {
         allowNull: false,
-        field: 'home_tema_goals',
+        field: 'in_progress',
         type: Sequelize.BOOLEAN
       }
     })
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Matches');
+    await queryInterface.dropTable('matches');
   }
 }
