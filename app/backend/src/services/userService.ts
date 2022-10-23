@@ -8,8 +8,8 @@ class UserService {
     this.model = new Users();
   }
 
-  public userLogin = async ({ email }: Login) => {
-    const user = await Users.findOne({ where: { email } });
+  public userLogin = async ({ email, password }: Login) => {
+    const user = await Users.findOne({ where: { email, password } });
     return user;
   };
 }

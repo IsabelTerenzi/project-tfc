@@ -8,9 +8,9 @@ class UserController {
 
   public userLogin = async (req: Request, res: Response) => {
     const login: Login = req.body;
-    const { email } = req.body;
+    const { email, password } = req.body;
 
-    if (!email) {
+    if (!email || !password) {
       return res.status(400).json({ message: 'All fields must be filled' });
     }
 
