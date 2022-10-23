@@ -14,7 +14,7 @@ const { expect } = chai;
 
 const userLogin = {
   email: 'admin@admin.com',
-  password: 'secret_adm',
+  password: 'secret_admin',
 }
 
 const userLoginFail = {

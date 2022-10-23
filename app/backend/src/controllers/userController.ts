@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import * as bcryptjs from 'bcryptjs';
 import Login from '../interfaces/login';
 import UserService from '../services/userService';
 import { createToken } from '../jwt/jwtAuth';
@@ -17,6 +18,12 @@ class UserController {
     const user = await this.userService.userLogin(login);
 
     if (!user) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
+
+    const passwordValid = await bcryptjs.compare(password, user.password);
+
+    if (!passwordValid) {
       return res.status(401).json({ message: 'Incorrect email or password' });
     }
 
