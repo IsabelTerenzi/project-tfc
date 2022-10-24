@@ -1,5 +1,6 @@
 import Users from '../database/models/UserModel';
-import Login from '../interfaces/login';
+import Login, { User } from '../interfaces/login';
+import { authToken } from '../jwt/jwtAuth';
 
 class UserService {
   public model: Users;
@@ -8,9 +9,14 @@ class UserService {
     this.model = new Users();
   }
 
-  public userLogin = async ({ email }: Login) => {
+  public userLogin = async ({ email }: Login): Promise<User | null> => {
     const user = await Users.findOne({ where: { email } });
     return user;
+  };
+
+  public getUser = (token: string) => {
+    const authJwt = authToken(token);
+    return authJwt.role;
   };
 }
 
