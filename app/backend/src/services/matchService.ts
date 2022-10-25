@@ -33,6 +33,11 @@ class MatchService {
     const match = await Matches.create({ ...infos, inProgress: true });
     return match;
   };
+
+  public finishMatch = async (id: string) => {
+    const matchFinished = await Matches.update({ inProgress: false }, { where: { id } });
+    return matchFinished;
+  };
 }
 
 export default MatchService;

@@ -27,12 +27,19 @@ class MatchController {
     }
 
     try {
-      authToken(authorization);
+      const payload = authToken(authorization);
+      req.headers.id = payload.id;
       const newMatch = await this.matchService.createMatch(match);
       return res.status(201).json(newMatch);
     } catch (error) {
       return res.status(401).json({ message: 'Invalid token' });
     }
+  };
+
+  public finishMatch = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await this.matchService.finishMatch(id);
+    return res.status(200).json({ message: 'Finished' });
   };
 }
 
