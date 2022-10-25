@@ -799,6 +799,29 @@ const matchesInProgress = [
   }
 ]
 
+const createMatch = {
+  "homeTeam": 16,
+  "awayTeam": 8,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+}
+
+const matchCreated = {
+  "id": 51,
+  "homeTeam": 16,
+  "awayTeam": 8,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+  "inProgress": true
+}
+
+const userLogin = {
+  email: 'admin@admin.com',
+  password: 'secret_admin',
+}
+
+const tokenInvalid = 'invalidtoken123456'
+
 describe('Testes de Matches', () => {
 
    it('Testa se a rota /matches retorna status 200 e as partidas listadas', async () => {
@@ -812,6 +835,41 @@ describe('Testes de Matches', () => {
     expect(matches.status).to.be.equal(200);
     expect(matches.body).to.be.deep.equal(matchesInProgress);
    })
-   
 
+   it('Testa se é possível criar uma partida', async () => {
+    const login = await chai.request(app).post('/login').send(userLogin); 
+    const token = login.body.token;
+    const match = await chai.request(app).post('/matches').send(createMatch)
+    .set('authorization', token);
+    expect(match.status).to.be.equal(201);
+    expect(match.body).to.have.property('id');
+    expect(match.body).to.have.property('inProgress');
+   })
+   
+   it('Testa se é possível finalizar uma partida', async () => {
+    const match = await chai.request(app).patch('/matches/1/finish');
+    expect(match.status).to.be.equal(200);
+    expect(match.body).to.have.property('message');
+   })
+
+   it('Testa se é possível atualizar uma partida', async () => {
+    const match = await chai.request(app).patch('/matches/1');
+    expect(match.status).to.be.equal(200);
+    expect(match.body).to.be.deep.equal({ message: 'Updated' });
+   })
+
+   it('Testa o envio sem authorization', async () => {
+    await chai.request(app).post('/login').send(userLogin); 
+    const match = await chai.request(app).post('/matches').send(createMatch);
+    expect(match.status).to.be.equal(401);
+    expect(match.body).to.be.deep.equal({ message: "User unauthorized" })
+   })
+
+   it('Testa o envio de um token inválido', async () => {
+    const login = await chai.request(app).post('/login').send(userLogin); 
+    const match = await chai.request(app).post('/matches').send(createMatch)
+    .set('authorization', tokenInvalid);
+    expect(match.status).to.be.equal(401);
+    expect(match.body).to.be.deep.equal({ message: "Token must be a valid token" })
+   })
 });

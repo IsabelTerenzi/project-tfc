@@ -49,4 +49,13 @@ describe('Testes de Login', () => {
     expect(login.body).not.to.have.property('token');
     expect(login.body).to.be.deep.equal({ message: 'Incorrect email or password' });
    })
+
+   it('Testa se é possível ver o role de um usuário', async () => {
+    const login = await chai.request(app).post('/login').send(userLogin); 
+    const token = login.body.token;
+    const role = await chai.request(app).get('/login/validate')
+    .set('authorization', token);
+    expect(role.status).to.be.equal(200);
+    expect(role.body).to.be.deep.equal({ "role": "admin" });
+   })
 });
