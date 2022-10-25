@@ -38,6 +38,12 @@ class MatchService {
     const matchFinished = await Matches.update({ inProgress: false }, { where: { id } });
     return matchFinished;
   };
+
+  public updateMatch = async (id: string, homeTeam: number, awayTeam: number) => {
+    const matchUpdated = await Matches
+      .update({ homeTeamGoals: homeTeam, awayTeamGoals: awayTeam }, { where: { id } });
+    return matchUpdated;
+  };
 }
 
 export default MatchService;
