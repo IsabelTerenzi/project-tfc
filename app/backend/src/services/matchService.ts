@@ -28,6 +28,11 @@ class MatchService {
     });
     return doneMatches;
   };
+
+  public createMatch = async (infos: Match): Promise<Match> => {
+    const match = await Matches.create({ ...infos, inProgress: true });
+    return match;
+  };
 }
 
 export default MatchService;
