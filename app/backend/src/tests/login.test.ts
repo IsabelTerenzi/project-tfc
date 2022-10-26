@@ -27,6 +27,11 @@ const userLoginFalse = {
   password: 'belteste',
 }
 
+const userLoginWrongPassword = {
+  email: 'admin@admin.com',
+  password: 'belteste',
+}
+
 describe('Testes de Login', () => {
  // let chaiHttpResponse: Response;
 
@@ -45,6 +50,13 @@ describe('Testes de Login', () => {
 
    it('Testa se o login falha ao enviar um usuário não existente', async () => {
     const login = await chai.request(app).post('/login').send(userLoginFalse);
+    expect(login.status).to.be.equal(401);
+    expect(login.body).not.to.have.property('token');
+    expect(login.body).to.be.deep.equal({ message: 'Incorrect email or password' });
+   })
+
+   it('Testa se o login falha ao enviar uma senha errada', async () => {
+    const login = await chai.request(app).post('/login').send(userLoginWrongPassword);
     expect(login.status).to.be.equal(401);
     expect(login.body).not.to.have.property('token');
     expect(login.body).to.be.deep.equal({ message: 'Incorrect email or password' });

@@ -806,6 +806,20 @@ const createMatch = {
   "awayTeamGoals": 2,
 }
 
+const createMatchEqualTeams = {
+  "homeTeam": 16,
+  "awayTeam": 16,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+}
+
+const createMatchWrongId = {
+  "homeTeam": 200,
+  "awayTeam": 16,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+}
+
 const matchCreated = {
   "id": 51,
   "homeTeam": 16,
@@ -844,6 +858,24 @@ describe('Testes de Matches', () => {
     expect(match.status).to.be.equal(201);
     expect(match.body).to.have.property('id');
     expect(match.body).to.have.property('inProgress');
+   })
+
+   it('Testa se não é possível criar uma partida de um time com id inexistente', async () => {
+    const login = await chai.request(app).post('/login').send(userLogin); 
+    const token = login.body.token;
+    const match = await chai.request(app).post('/matches').send(createMatchWrongId)
+    .set('authorization', token);
+    expect(match.status).to.be.equal(404);
+    expect(match.body).to.be.deep.equal({ message: 'There is no team with such id!' });
+   })
+
+   it('Testa se não é possível criar uma partida com times iguais', async () => {
+    const login = await chai.request(app).post('/login').send(userLogin); 
+    const token = login.body.token;
+    const match = await chai.request(app).post('/matches').send(createMatchEqualTeams)
+    .set('authorization', token);
+    expect(match.status).to.be.equal(422);
+    expect(match.body).to.be.deep.equal({ message: 'It is not possible to create a match with two equal teams' });
    })
    
    it('Testa se é possível finalizar uma partida', async () => {
