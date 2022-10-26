@@ -8,6 +8,16 @@ class LeaderboardController {
     const allLeaderboards = await this.leaderboardService.getAllLeaderboards();
     return res.status(200).json(allLeaderboards);
   };
+
+  public getHomeLeaderboards = async (req: Request, res: Response) => {
+    const homeLeaderboards = await this.leaderboardService.getHomeLeaderboards();
+    return res.status(200).json(homeLeaderboards);
+  };
+
+  public getAwayLeaderboards = async (req: Request, res: Response) => {
+    const awayLeaderboards = await this.leaderboardService.getAwayLeaderboards();
+    return res.status(200).json(awayLeaderboards);
+  };
 }
 
 export default LeaderboardController;

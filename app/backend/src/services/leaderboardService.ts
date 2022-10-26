@@ -34,6 +34,32 @@ class LeaderboardService {
     const sortedLeaderboard = this.sort(leaderboard);
     return sortedLeaderboard;
   };
+
+  public getHomeLeaderboards = async (): Promise<Leaderboard[]> => {
+    const teams = await Teams.findAll();
+    const matches = await Matches.findAll({ where: { inProgress: false } });
+
+    const leaderboardHome = teams.map((team) => {
+      const leaderboard = matches.filter((match) => match.homeTeam === team.id);
+      return { name: team.teamName, ...getLeaderboard(leaderboard, team.id) };
+    });
+
+    const sortedLeaderboard = this.sort(leaderboardHome);
+    return sortedLeaderboard;
+  };
+
+  public getAwayLeaderboards = async (): Promise<Leaderboard[]> => {
+    const teams = await Teams.findAll();
+    const matches = await Matches.findAll({ where: { inProgress: false } });
+
+    const leaderboardAway = teams.map((team) => {
+      const leaderboard = matches.filter((match) => match.awayTeam === team.id);
+      return { name: team.teamName, ...getLeaderboard(leaderboard, team.id) };
+    });
+
+    const sortedLeaderboard = this.sort(leaderboardAway);
+    return sortedLeaderboard;
+  };
 }
 
 export default LeaderboardService;
